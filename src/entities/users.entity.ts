@@ -1,13 +1,14 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { maxNameLength, maxPasswordLength } from "../modules/auth/common/config/auth.config";
 
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar', length: 50, unique: true })
-    name: string;
+  @Column({ type: "varchar", length: maxNameLength, unique: true })
+  name: string;
 
-    @Column({ type: 'varchar', length: 256 })
-    password: string;
+  @Column({ type: "varchar", length: maxPasswordLength })
+  password: string;
 }
