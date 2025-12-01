@@ -1,11 +1,13 @@
-import { Module } from "@nestjs/common";
+import { Module, ValidationPipe } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./modules/auth/auth.module";
 import { BcryptModule } from "./packages/bcrypt/bcrypt.module";
 import { UsersModule } from "./modules/users/users.module";
+import { StoriesModule } from "./modules/stories/stories.module";
 import * as process from "process";
+import { APP_PIPE } from "@nestjs/core";
 
 @Module({
   imports: [
@@ -23,8 +25,18 @@ import * as process from "process";
     AuthModule,
     BcryptModule,
     UsersModule,
+    StoriesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    },
+  ],
 })
 export class AppModule {}

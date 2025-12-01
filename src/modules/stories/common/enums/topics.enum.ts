@@ -1,0 +1,7 @@
+export enum TopicsEnum {
+  ADVENTURE = "ADVENTURE",
+  HORROR = "HORROR",
+  COMEDY = "COMEDY",
+  ROMANTIC = "ROMANTIC",
+  NARRATIVE = "NARRATIVE",
+}

@@ -1,8 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./users.entity";
+import { TopicsEnum } from "../modules/stories/common/enums/topics.enum";
 
 @Entity({ name: "stories" })
-export class story {
+export class Story {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,6 +22,9 @@ export class story {
   @Column({ type: "text" })
   files: string;
 
-  @OneToMany(type => User, user => user.id)
-  userId: User;
+  @Column({ type: "enum", enum: TopicsEnum, default: TopicsEnum.NARRATIVE })
+  topic: TopicsEnum;
+
+  @ManyToOne(() => User, user => user.id, { nullable: false })
+  user: User;
 }
