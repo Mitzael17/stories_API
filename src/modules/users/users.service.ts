@@ -18,4 +18,8 @@ export class UsersService {
 
     return null;
   }
+
+  getSelectSafetyUserData() {
+    return { id: true, name: true };
+  }
 }

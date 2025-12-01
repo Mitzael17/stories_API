@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Query } from "@nestjs/common";
+import { Controller, Get, Inject, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { StoriesService } from "./stories.service";
 import { GetStoriesDto } from "./common/dto/get-stories.dto";
 
@@ -9,5 +9,10 @@ export class StoriesController {
   @Get()
   getStories(@Query() params: GetStoriesDto = {}) {
     return this.storiesService.getStories(params.page, params.to, params.topic);
+  }
+
+  @Get(":id")
+  getStory(@Param("id", ParseIntPipe) id: number) {
+    return this.storiesService.getStoryById(id);
   }
 }
