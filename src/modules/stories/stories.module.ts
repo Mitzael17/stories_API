@@ -4,10 +4,11 @@ import { StoriesService } from "./stories.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Story } from "../../entities/stories.entity";
 import { UsersModule } from "../users/users.module";
+import { FilesService } from "../../packages/files/files.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Story]), UsersModule],
   controllers: [StoriesController],
-  providers: [StoriesService],
+  providers: [StoriesService, FilesService],
 })
 export class StoriesModule {}

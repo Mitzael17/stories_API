@@ -8,6 +8,9 @@ import { UsersModule } from "./modules/users/users.module";
 import { StoriesModule } from "./modules/stories/stories.module";
 import * as process from "process";
 import { APP_PIPE } from "@nestjs/core";
+import { FilesModule } from "./packages/files/files.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { STATIC_FOLDER_DIR } from "./common/configs/static.config";
 
 @Module({
   imports: [
@@ -26,6 +29,11 @@ import { APP_PIPE } from "@nestjs/core";
     BcryptModule,
     UsersModule,
     StoriesModule,
+    FilesModule,
+    ServeStaticModule.forRoot({
+      rootPath: STATIC_FOLDER_DIR,
+      serveRoot: "/static",
+    }),
   ],
   controllers: [AppController],
   providers: [
