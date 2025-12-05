@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { signUpDto } from "./common/dto/sign-up.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "../../entities/users.entity";
