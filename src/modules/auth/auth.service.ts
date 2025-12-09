@@ -6,7 +6,7 @@ import { Equal, Repository } from "typeorm";
 import { AuthErrorsEnum } from "./common/enums/auth.enum";
 import { BcryptService } from "../../packages/bcrypt/bcrypt.service";
 import { JwtService } from "@nestjs/jwt";
-import { ReqUserInterface } from "./common/interfaces/req-user.interface";
+import { AuthResponse } from "./common/interfaces/auth-response.interface";
 
 @Injectable()
 export class AuthService {
@@ -17,13 +17,9 @@ export class AuthService {
   ) {}
 
   async signUp(userData: signUpDto) {
-    const isNameBusy = await this.userRepository.exists({
-      where: { name: Equal(userData.name) },
-    });
+    await this.checkIfUserExists(userData.name);
 
-    if (isNameBusy) throw new BadRequestException(AuthErrorsEnum.NAME_BUSY);
-
-    const hashedPassword = this.bcryptService.hash(userData.password);
+    const hashedPassword = await this.bcryptService.hash(userData.password);
 
     const newUser = this.userRepository.create({
       ...userData,
@@ -31,25 +27,25 @@ export class AuthService {
     });
 
     const savedUser = await this.userRepository.save(newUser);
-    const payload = { sub: savedUser.id, name: savedUser.name };
 
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
+    return this.generateAuthResponse(savedUser.id, savedUser.name);
   }
 
-  async signIn(userData: ReqUserInterface) {
-    // const userFromDb = await this.userRepository.findOne({
-    //   where: { name: Equal(userData.name) },
-    // });
-    //
-    // if (!userFromDb) throw new NotFoundException(AuthErrorsEnum.NOT_EXIST);
+  private async checkIfUserExists(name: string): Promise<void> {
+    const isNameBusy = await this.userRepository.exists({
+      where: { name: Equal(name) },
+    });
 
-    // if (!(await this.bcryptService.compare(userData.password, userFromDb.password))) {
-    //   throw new ForbiddenException(AuthErrorsEnum.WRONG_PASSWORD);
-    // }
+    if (isNameBusy) {
+      throw new BadRequestException(AuthErrorsEnum.NAME_BUSY);
+    }
+  }
 
-    const payload = { sub: userData.id, name: userData.name };
+  generateAuthResponse(userId: number, userName: string): AuthResponse {
+    const payload = {
+      sub: userId,
+      name: userName,
+    };
 
     return {
       accessToken: this.jwtService.sign(payload),

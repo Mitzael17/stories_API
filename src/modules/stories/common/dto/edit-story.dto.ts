@@ -1,6 +1,6 @@
 import { ArrayMaxSize, IsArray, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { TopicsEnum } from "../enums/topics.enum";
-import { MAX_FILES } from "../../../../common/configs/static.config";
+import { MAX_STORY_FILES } from "../../../../common/configs/static.config";
 
 export class EditStoryDto {
   @IsNumber()
@@ -24,6 +24,6 @@ export class EditStoryDto {
 
   @IsOptional()
   @IsArray()
-  @ArrayMaxSize(MAX_FILES)
+  @ArrayMaxSize(MAX_STORY_FILES)
   deleteFiles: string[] = [];
 }
