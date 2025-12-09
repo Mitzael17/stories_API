@@ -19,13 +19,13 @@ export class StoriesService {
     @Inject(FilesService) private readonly filesService: FilesService,
   ) {}
 
-  async getStories(page = 1, to = 5, topic: TopicsEnum = undefined) {
-    const from = (page - 1) * to;
+  async getStories(page = 1, take = 5, topic: TopicsEnum = undefined) {
+    const skip = (page - 1) * take;
     const where = topic ? { topic: Equal(topic) } : {};
 
     const stories = await this.storiesRepository.find({
-      skip: from,
-      take: to,
+      skip,
+      take,
       relations: ["user"],
       select: { user: this.usersService.getSelectSafetyUserData() },
       where,
@@ -44,12 +44,12 @@ export class StoriesService {
 
   async getStoryById(id: number) {
     const story = await this.findStoryWithUserOrFail(id);
-    const fileNames = this.filesService.parseFilenamesFromString(story.files);
+    const filenames = this.filesService.parseFilenamesFromString(story.files);
 
     return {
       ...story,
-      files: this.filesService.concatUrlWithFiles(fileNames),
-      fileNames,
+      files: this.filesService.concatUrlWithFiles(filenames),
+      filenames,
     };
   }
 

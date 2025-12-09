@@ -16,7 +16,7 @@ export class StoriesController {
 
   @Get()
   getStories(@Query() params: GetStoriesDto = {}) {
-    return this.storiesService.getStories(params.page, params.to, params.topic);
+    return this.storiesService.getStories(params.page, params.take, params.topic);
   }
 
   @Get(":id")

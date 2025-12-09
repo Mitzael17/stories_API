@@ -8,7 +8,7 @@ export class GetStoriesDto {
 
   @IsNumber()
   @IsOptional()
-  to?: number;
+  take?: number;
 
   @IsNumber()
   @IsOptional()
