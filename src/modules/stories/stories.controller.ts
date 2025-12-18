@@ -19,6 +19,12 @@ export class StoriesController {
     return this.storiesService.getStories(params.page, params.take, params.topic);
   }
 
+  @Get("/my-stories")
+  @UseGuards(JwtAuthGuard)
+  getMyStories(@Query() params: GetStoriesDto = {}, @UserDecorator() user: User) {
+    return this.storiesService.getStories(params.page, params.take, params.topic, user);
+  }
+
   @Get(":id")
   getStory(@Param("id", ParseIntPipe) id: number) {
     return this.storiesService.getStoryById(id);

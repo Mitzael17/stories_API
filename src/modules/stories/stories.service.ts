@@ -19,20 +19,19 @@ export class StoriesService {
     @Inject(FilesService) private readonly filesService: FilesService,
   ) {}
 
-  async getStories(page = 1, take = 5, topic: TopicsEnum = undefined) {
+  async getStories(page = 1, take = 5, topic: TopicsEnum = undefined, user: User = undefined) {
     const skip = (page - 1) * take;
-    const where = topic ? { topic: Equal(topic) } : {};
 
-    const stories = await this.storiesRepository.find({
+    const [stories, total] = await this.storiesRepository.findAndCount({
       skip,
       take,
       relations: ["user"],
       select: { user: this.usersService.getSelectSafetyUserData() },
-      where,
+      where: { topic: topic ? Equal(topic) : undefined, user: user ? Equal(user?.id) : undefined },
       order: { id: "DESC" },
     });
 
-    return stories.map(story => {
+    const storiesWithUrlFiles = stories.map(story => {
       const files = this.filesService.parseFilenamesFromString(story.files);
 
       return {
@@ -40,6 +39,8 @@ export class StoriesService {
         files: this.filesService.concatUrlWithFiles(files),
       };
     });
+
+    return { stories: storiesWithUrlFiles, total };
   }
 
   async getStoryById(id: number) {
